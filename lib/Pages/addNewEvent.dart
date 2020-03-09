@@ -11,6 +11,10 @@ class NewEventPage extends StatefulWidget {
 }
 
 class _NewEventPageState extends State<NewEventPage> {
+  final formKey = GlobalKey<FormState>();
+   DateTime _time;
+  String eventName;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,6 +23,7 @@ class _NewEventPageState extends State<NewEventPage> {
         appBar: newAppBar(appBarTitle: "New Event"),
         body: Container(
           child: Form(
+            key: formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
@@ -35,6 +40,9 @@ class _NewEventPageState extends State<NewEventPage> {
                         maxLines: 1,
                         maxLength: 40,
                         maxLengthEnforced: true,
+                        onSaved: (value) => eventName=value,
+                        validator: (value) =>
+                            value.isNotEmpty ? null : "Please Enter an Event",
                         decoration: InputDecoration(
                           hintText: "Event Name",
                           border: InputBorder.none,
@@ -49,13 +57,21 @@ class _NewEventPageState extends State<NewEventPage> {
                 Center(
                   child: FlatButton(
                     colorBrightness: Brightness.light,
-                   // color: Colors.blueGrey.shade50,
-                   // elevation: 2,
-                    child: Text("Select a specific date",textScaleFactor: 1.8,),
-                    onPressed: () => DatePicker.showDatePicker(
-                      context,
-                      maxTime: DateTime(DateTime.now().year + 5),
+                    // color: Colors.blueGrey.shade50,
+                    // elevation: 2,
+                    child: Text(
+                      "Select a specific date",
+                      textScaleFactor: 1.8,
                     ),
+                    onPressed: () async {
+                      _time = await DatePicker.showDatePicker(
+                        context,
+                        maxTime: DateTime(DateTime.now().year + 5),
+                      );
+                      if (_time != null) {
+                        print(_time);
+                      }
+                    },
                   ),
                 ),
                 SizedBox(
@@ -80,8 +96,14 @@ class _NewEventPageState extends State<NewEventPage> {
                           elevation: 5,
                           child: Text("Add"),
                           onPressed: () {
-                            Fluttertoast.showToast(msg: "Added New Event");
-                            Navigator.pop(context);
+                            if(_time==null) Fluttertoast.showToast(msg: "Select a specific date",gravity: ToastGravity.CENTER);
+                            if (formKey.currentState.validate() && _time!=null) {
+                              formKey.currentState.save();
+                              print(eventName);
+                              print(_time);                              
+                              Fluttertoast.showToast(msg: "Added New Event");
+                              Navigator.pop(context);
+                            }
                           }),
                     ],
                   ),
