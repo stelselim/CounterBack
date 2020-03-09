@@ -24,7 +24,7 @@ class _NewEventPageState extends State<NewEventPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.1,
+                  height: MediaQuery.of(context).size.height * 0.07,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -48,14 +48,14 @@ class _NewEventPageState extends State<NewEventPage> {
                   height: MediaQuery.of(context).size.height * 0.03,
                 ),
                 Center(
-                  child: RaisedButton(
+                  child: FlatButton(
                     colorBrightness: Brightness.light,
-                    color: Colors.blueGrey.shade50,
-                    elevation: 2,
-                    child: Text("Select a specific date"),
+                   // color: Colors.blueGrey.shade50,
+                   // elevation: 2,
+                    child: Text("Select a specific date",textScaleFactor: 1.8,),
                     onPressed: () => DatePicker.showDatePicker(
                       context,
-                      maxTime: DateTime(DateTime.now().year+5),
+                      maxTime: DateTime(DateTime.now().year + 5),
                     ),
                   ),
                 ),
@@ -67,25 +67,23 @@ class _NewEventPageState extends State<NewEventPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       RaisedButton(
-                        colorBrightness: Brightness.light,
-                        //color: Colors.blueGrey.shade100,
-                        elevation: 5,
-                        child: Text("Cancel"),
-                        onPressed: () => Navigator.pop(context)
-                      ),
+                          colorBrightness: Brightness.light,
+                          //color: Colors.blueGrey.shade100,
+                          elevation: 5,
+                          child: Text("Cancel"),
+                          onPressed: () => Navigator.pop(context)),
                       SizedBox(
                         width: 35,
                       ),
                       RaisedButton(
-                        colorBrightness: Brightness.light,
-                       // color: Colors.blue.shade50,
-                        elevation: 5,
-                        child: Text("Add"),
-                        onPressed: () {
-                          Fluttertoast.showToast(msg: "Added New Event");
-                          Navigator.pop(context);
-                        }
-                      ),
+                          colorBrightness: Brightness.light,
+                          // color: Colors.blue.shade50,
+                          elevation: 5,
+                          child: Text("Add"),
+                          onPressed: () {
+                            Fluttertoast.showToast(msg: "Added New Event");
+                            Navigator.pop(context);
+                          }),
                     ],
                   ),
                 ),
