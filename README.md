@@ -1,6 +1,6 @@
 # counterback
 
-A new Flutter project.
+A new Flutter project. This is a counter back project.
 
 ## Getting Started
 
