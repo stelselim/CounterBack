@@ -1,7 +1,9 @@
 import 'package:counterback/components/appbar.dart';
+import 'package:counterback/operations/localDB.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sqflite/sqflite.dart';
 
 class NewEventPage extends StatefulWidget {
   NewEventPage({Key key}) : super(key: key);
@@ -12,8 +14,10 @@ class NewEventPage extends StatefulWidget {
 
 class _NewEventPageState extends State<NewEventPage> {
   final formKey = GlobalKey<FormState>();
-   DateTime _time;
+  DateTime _time;
+  final _databaseOperations = DatabaseOperations();
   String eventName;
+  DateTime special = DateTime(DateTime.now().year, 5, 17);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,7 @@ class _NewEventPageState extends State<NewEventPage> {
                         maxLines: 1,
                         maxLength: 40,
                         maxLengthEnforced: true,
-                        onSaved: (value) => eventName=value,
+                        onSaved: (value) => eventName = value,
                         validator: (value) =>
                             value.isNotEmpty ? null : "Please Enter an Event",
                         decoration: InputDecoration(
@@ -68,14 +72,30 @@ class _NewEventPageState extends State<NewEventPage> {
                         context,
                         maxTime: DateTime(DateTime.now().year + 5),
                       );
+
                       if (_time != null) {
                         print(_time);
                       }
+                      setState(() {});
                     },
                   ),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.14,
+                  child: Center(
+                    child: Container(
+                      child: _time == special
+                          ? Text(
+                              "Special Day",
+                              style: TextStyle(
+                                color: Colors.blue.shade900,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textScaleFactor: 1.2,
+                            )
+                          : null,
+                    ),
+                  ),
                 ),
                 Center(
                   child: Row(
@@ -95,14 +115,34 @@ class _NewEventPageState extends State<NewEventPage> {
                           // color: Colors.blue.shade50,
                           elevation: 5,
                           child: Text("Add"),
-                          onPressed: () {
-                            if(_time==null) Fluttertoast.showToast(msg: "Select a specific date",gravity: ToastGravity.CENTER);
-                            if (formKey.currentState.validate() && _time!=null) {
+                          onPressed: () async {
+                            if (_time == null)
+                              Fluttertoast.showToast(
+                                  msg: "Select a specific date",
+                                  gravity: ToastGravity.CENTER);
+                            if (formKey.currentState.validate() &&
+                                _time != null) {
                               formKey.currentState.save();
-                              print(eventName);
-                              print(_time);                              
+                              try {
+                                if (await databaseExists(
+                                    await _databaseOperations
+                                        .getPathOfDatabase())) {
+                                  await _databaseOperations.addNewEvent(
+                                      eventName, _time);
+                                  print('Updated & Success');
+                                } else {
+                                  await _databaseOperations.openDB();
+                                  await _databaseOperations.addNewEvent(
+                                      eventName, _time);
+                                  print('Created & Success');
+                                }
+                              } catch (e) {
+                                print(e);
+                              }
+
                               Fluttertoast.showToast(msg: "Added New Event");
-                              Navigator.pop(context);
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  "/home", (Route<dynamic> route) => false);
                             }
                           }),
                     ],

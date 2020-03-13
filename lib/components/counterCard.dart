@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 
 class CounterCard extends StatelessWidget {
-  final cardData;
+  
+  final String title;
+  final String date;
 
   CounterCard({
-    this.cardData,
+   @required this.date,
+   @required this.title,
   });
 
   @override
   Widget build(BuildContext context) {
+
+
+    DateTime now = DateTime.now();
+    DateTime input= DateTime.parse(date);
+    Duration duration = now.difference(input);
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -24,7 +33,7 @@ class CounterCard extends StatelessWidget {
             ListTile(
               
               title: Text(
-                "450",
+                duration.inDays==0?"Today":duration.inDays.toString(),
                 textScaleFactor: 4.5,
                 textAlign: TextAlign.center,
               ),
@@ -35,7 +44,7 @@ class CounterCard extends StatelessWidget {
               ),
             ),
             Text(
-              "Javascript Phase",
+              title,
               textScaleFactor: 1.6,
               style: TextStyle(
                 fontWeight: FontWeight.w400,

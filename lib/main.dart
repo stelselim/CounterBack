@@ -27,34 +27,13 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
-  int _index = 0;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        appBar: mainAppBar(appBarTitle: "Count To Goal"),
-        body: _index == 0 ? MainBody() : HistoryBody(),
-        bottomNavigationBar: BottomNavigationBar(
-          // selectedFontSize: MediaQuery.of(context).textScaleFactor*14,
-          // unselectedFontSize: MediaQuery.of(context).textScaleFactor*14,
-          currentIndex: _index,
-          onTap: (index) {
-            setState(() {
-              _index = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              title: Text("Active"),
-              icon: Icon(Icons.schedule),
-            ),
-            BottomNavigationBarItem(
-              title: Text("History"),
-              icon: Icon(Icons.history),
-            ),
-          ],
-        ),
+        appBar: mainAppBar(context: context,appBarTitle: "Count To Goal"),
+        body: MainBody(),
         floatingActionButton: homeFloatingActionButton(context),
       ),
     );
